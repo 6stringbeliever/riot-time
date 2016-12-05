@@ -10,82 +10,27 @@
       label {
         display: block;
       }
+      .contain {
+        display: flex;
+        flex-direction: row;
+      }
     </style>
   </head>
   <body>
-    <project-list></project-list>
-    <add-project-form></add-project-form>
+    <div class="contain">
+      <div class="sec">
+        <entry-form></entry-form>
+      </div>
+      <div class="sec">
+        <project-list></project-list>
+        <project-add-form></project-add-form>
+      </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.0.1/riot+compiler.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/riot/3.0/riot.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyBOjXr1abnwtVZ49hUbhCu9gPvuBUGpgJc",
-        authDomain: "riot-time.firebaseapp.com",
-        databaseURL: "https://riot-time.firebaseio.com",
-        storageBucket: "riot-time.appspot.com",
-        messagingSenderId: "267994916464"
-      };
-      firebase.initializeApp(config);
-      var db = firebase.database();
-    </script>
-    <script type="riot/tag">
-      <entry-form>
-        <label>Enter your hours</label>
-        <input type="number" name="time-entry" placeholder="Enter your hours" />
-      </entry-form>
-
-      <project-list>
-        <h2>Projects</h2>
-        <ul>
-          <li each={ this.projects }>{ name } <button type="button" onclick={ parent.removeItem }>Delete</button></li>
-        </ul>
-        this.projects = [];
-
-        this.on('before-mount', function() {
-          var projref = db.ref('projects');
-          projref.on('value', this.updateProjects);
-        });
-
-        updateProjects(proj) {
-          var data = proj.val();
-          var keys = Object.keys(data);
-          var newprojlist = [];
-          keys.forEach(function(key) {
-            newprojlist.push({
-              name: data[key].name,
-              key: key
-            })
-          });
-          this.projects = newprojlist;
-          this.update();
-        }
-
-        removeItem(e) {
-          var index = this.projects.indexOf(e.item);
-          db.ref('projects/' + this.projects[index].key).remove();
-        }
-      </project-list>
-
-      <add-project-form>
-        <h2>Add a project</h2>
-        <label htmlFor="proj-add">Name</label>
-        <input type="text" name="proj-add" ref="projAdd" placeholder="Enter your project name" />
-        <button type="button" onclick={ addItem }>Add Project</button>
-
-        addItem(e) {
-          var text = this.refs.projAdd.value;
-          if (text) {
-            var newkey = db.ref().child('projects').push().key;
-            db.ref('projects/' + newkey).set({'name': text});
-          }
-          this.refs.projAdd.value = '';
-        }
-      </add-project-form>
-    </script>
-    <script>
-      riot.mount('*');
-    </script>
+    <script src="js/tags.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
