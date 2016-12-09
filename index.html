@@ -7,16 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <style>
+      * {
+        box-sizing: border-box;
+      }
       label {
         display: block;
       }
       .contain {
         display: flex;
         flex-direction: row;
+        width: 75%;
+        margin: 0 auto;
+      }
+      .sec {
+        padding: 12px;
+        width: 50%;
+      }
+      textarea {
+        max-width: 100%;
       }
     </style>
   </head>
   <body>
+    <header><h1>Riot Time</h1></header>
     <div class="contain">
       <div class="sec">
         <entry-form></entry-form>

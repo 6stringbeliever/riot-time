@@ -35,14 +35,33 @@ var ProjectList = function(db, riot) {
   });
 
   this.on('project-remove', function(key) {
+    // TODO Remove time entries for project
     this.db.ref('projects/' + key).remove();
   });
 };
 ProjectList.prototype.getProjects = function() {
   return this.projects;
 };
+ProjectList.prototype.getProjectNameFromKey = function(key) {
+
+}
+
+var TimeEntryList = function(db, riot) {
+  this.db = db;
+  this.timeEntries = [];
+  riot.observable(this);
+
+  this.on('time-add', function(time) {
+    if (time) {
+      var newkey = this.db.ref().child('time').push().key;
+      this.db.ref('time/' + newkey).set(time);
+    }
+  });
+}
 
 var projects = new ProjectList(firebase.database(), riot);
+var timeEntry = new TimeEntryList(firebase.database(), riot);
 
 riot.mount('project-add-form', {projects: projects});
 riot.mount('project-list', {projects: projects});
+riot.mount('entry-form', {projects: projects, timeEntry: timeEntry});
