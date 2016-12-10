@@ -1,3 +1,6 @@
+riot.tag2('app-nav', '<nav> <ul> <li>Enter Time</li> <li>Reports</li> <li>Projects</li> </ul> </nav>', '', '', function(opts) {
+});
+
 riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTime}"> <label for="time-date">Date</label> <input name="time-date" ref="date" type="date"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" type="number"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description"></textarea> <button>Enter Time</button> </form>', '', '', function(opts) {
     var tag = this;
     tag.projects = [];
@@ -63,4 +66,39 @@ riot.tag2('project-list', '<h2>Projects</h2> <ul> <li each="{this.projects}">{na
       tag.opts.projects.trigger('project-remove', tag.projects[index].key);
     }
 
+});
+
+riot.tag2('time-report', '<h2>Time</h2> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <ul if="{time}"> <li each="{time}">{parent.getName(project)} {date} - {hours} - {description}</li> </ul> <div if="{!time}"> <p>No time entries for this project. </div>', '', '', function(opts) {
+    var tag = this;
+    tag.projects = [];
+    tag.time = [];
+    tag.getTime = getTime;
+    tag.getName = getName;
+
+    tag.opts.projects.on('project-update', function() {
+      tag.projects = tag.opts.projects.getProjects();
+      tag.update();
+    });
+
+    tag.on('mount', function() {
+      tag.opts.timeEntry.trigger('time-retrieve');
+    });
+
+    tag.opts.timeEntry.on('time-update', function() {
+      tag.time = tag.opts.timeEntry.timeEntries;
+      tag.update();
+    });
+
+    function getTime() {
+      var key = tag.refs.projSelect.value;
+      if (key === 'all') {
+        tag.opts.timeEntry.trigger('time-retrieve');
+      } else {
+        tag.opts.timeEntry.trigger('time-retrieve', key);
+      }
+    }
+
+    function getName(val) {
+      return tag.opts.projects.getProjectNameFromKey(val);
+    }
 });

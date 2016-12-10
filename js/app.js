@@ -1,3 +1,4 @@
+/* global firebase, riot */
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyBOjXr1abnwtVZ49hUbhCu9gPvuBUGpgJc",
@@ -43,7 +44,16 @@ ProjectList.prototype.getProjects = function() {
   return this.projects;
 };
 ProjectList.prototype.getProjectNameFromKey = function(key) {
-
+  // TODO Make more efficient by saving a backing key:project index
+  var name = '';
+  var i = 0;
+  while (name === '' && i < this.projects.length) {
+    if (this.projects[i].key === key) {
+      name = this.projects[i].name;
+    }
+    i++;
+  }
+  return name;
 }
 
 var TimeEntryList = function(db, riot) {
@@ -57,6 +67,27 @@ var TimeEntryList = function(db, riot) {
       this.db.ref('time/' + newkey).set(time);
     }
   });
+
+  this.on('time-retrieve', function(projectKey) {
+    var query;
+    if (projectKey) {
+      query = this.db.ref('time/').orderByChild('project').equalTo(projectKey);
+    } else {
+      query = this.db.ref('time/');
+    }
+    query.once('value').then(function(snapshot) {
+      var data = snapshot.val();
+      if (data) {
+        var keys = Object.keys(data);
+        var newtimelist = [];
+        keys.forEach(function(key) {
+          newtimelist.push(data[key]);
+        });
+      }
+      this.timeEntries = newtimelist;
+      this.trigger('time-update');
+    }.bind(this));
+  });
 }
 
 var projects = new ProjectList(firebase.database(), riot);
@@ -65,3 +96,5 @@ var timeEntry = new TimeEntryList(firebase.database(), riot);
 riot.mount('project-add-form', {projects: projects});
 riot.mount('project-list', {projects: projects});
 riot.mount('entry-form', {projects: projects, timeEntry: timeEntry});
+riot.mount('time-report', {projects: projects, timeEntry: timeEntry});
+riot.mount('app-nav');
