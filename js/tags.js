@@ -1,14 +1,14 @@
 riot.tag2('app-nav', '<nav> <ul> <li>Enter Time</li> <li>Reports</li> <li>Projects</li> </ul> </nav>', '', '', function(opts) {
 });
 
-riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTime}"> <label for="time-date">Date</label> <input name="time-date" ref="date" type="date"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" type="number"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description"></textarea> <button>Enter Time</button> </form>', '', '', function(opts) {
+riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" type="date"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" type="number"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description"></textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus"> Billed</label> <button>Enter Time</button> </form>', '', '', function(opts) {
     var tag = this;
     tag.projects = [];
     tag.submitTime = submitTime;
+    tag.reset = reset;
 
     tag.on('mount', function() {
-      var now = new Date();
-      tag.refs.date.value = now.toISOString().substr(0, 10);
+      tag.reset();
     });
 
     tag.opts.projects.on('project-update', tag.update);
@@ -32,7 +32,18 @@ riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTi
       if (this.refs.date.value) {
         entry.date = this.refs.date.value;
       }
+      if (this.refs.billStatus.checked) {
+        entry.billed = this.refs.billStatus.checked;
+      }
       tag.opts.timeEntry.trigger('time-add', entry);
+      tag.reset();
+    }
+
+    function reset() {
+      var now = new Date();
+      tag.refs.form.reset();
+
+      tag.refs.date.value = now.toISOString().substr(0, 10);
     }
 });
 
@@ -68,7 +79,10 @@ riot.tag2('project-list', '<h2>Projects</h2> <ul> <li each="{this.projects}">{na
 
 });
 
-riot.tag2('time-report', '<h2>Time</h2> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <ul if="{time}"> <li each="{time}">{parent.getName(project)} {date} - {hours} - {description}</li> </ul> <div if="{!time}"> <p>No time entries for this project. </div>', '', '', function(opts) {
+riot.tag2('time-item', '<li>{parent.getName(project)} {date} - {hours} - {description} <button type="button">Edit</button> <button type="button">Delete</button></li>', '', '', function(opts) {
+});
+
+riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="proj-bill-status">Billing Status</label> <select name="proj-bill-status" ref="projBillStatus" onchange="{getTime}"> <option value="all">All</option> <option value="false">Unbilled</option> <option value="true">Billed</option> </select> <ul if="{time}"> <time-item each="{time}" data="{this}"></time-item> </ul> <div if="{!time}"> <p>No time entries found. </div>', '', '', function(opts) {
     var tag = this;
     tag.projects = [];
     tag.time = [];
@@ -80,25 +94,19 @@ riot.tag2('time-report', '<h2>Time</h2> <select name="proj-select" ref="projSele
       tag.update();
     });
 
-    tag.on('mount', function() {
-      tag.opts.timeEntry.trigger('time-retrieve');
-    });
+    tag.opts.timeEntry.on('time-update', tag.getTime);
 
-    tag.opts.timeEntry.on('time-update', function() {
+    tag.opts.timeEntry.on('time-query-returned', function() {
       tag.time = tag.opts.timeEntry.timeEntries;
       tag.update();
     });
 
     function getTime() {
-      var key = tag.refs.projSelect.value;
-      if (key === 'all') {
-        tag.opts.timeEntry.trigger('time-retrieve');
-      } else {
-        tag.opts.timeEntry.trigger('time-retrieve', key);
-      }
+      tag.opts.timeEntry.trigger('time-retrieve', tag.refs.projSelect.value, tag.refs.projBillStatus.value);
     }
 
     function getName(val) {
       return tag.opts.projects.getProjectNameFromKey(val);
     }
+
 });
