@@ -25,6 +25,8 @@
     tag.time = [];
     tag.getTime = getTime;
     tag.getName = getName;
+    tag.editEntry = editEntry;
+    tag.deleteEntry = deleteEntry;
 
     tag.opts.projects.on('project-update', function() {
       tag.projects = tag.opts.projects.getProjects();
@@ -46,5 +48,12 @@
       return tag.opts.projects.getProjectNameFromKey(val);
     }
 
+    function editEntry(val) {
+      console.log('clicked edit', val.item);
+    }
+
+    function deleteEntry(val) {
+      tag.opts.timeEntry.trigger('time-remove', val.item.key)
+    }
   </script>
 </time-report>

@@ -72,6 +72,10 @@ var TimeEntryList = function(db, riot) {
     }
   });
 
+  this.on('time-remove', function(key) {
+    this.db.ref('time/' + key).remove();
+  });
+
   this.on('time-retrieve', function(projectKey, billed) {
     var query;
     if (projectKey === 'all') {
@@ -87,8 +91,10 @@ var TimeEntryList = function(db, riot) {
         keys.forEach(function(key) {
           var item = data[key];
           item.key = key;
-          if (billed === 'all' || (billed === 'true' && item.billed) || (billed === 'false' && !item.billed)) {
-            newtimelist.push(item);
+          if (billed === 'all' ||
+            (billed === 'true' && item.billed) ||
+            (billed === 'false' && !item.billed)) {
+              newtimelist.push(item);
           }
         });
       }
