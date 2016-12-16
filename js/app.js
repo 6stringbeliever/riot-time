@@ -76,6 +76,10 @@ var TimeEntryList = function(db, riot) {
     this.db.ref('time/' + key).remove();
   });
 
+  this.on('time-bill', function(key) {
+    this.db.ref('time/' + key).update({billed: true});
+  });
+
   this.on('time-retrieve', function(projectKey, billed) {
     var query;
     if (projectKey === 'all') {

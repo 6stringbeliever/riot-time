@@ -11,6 +11,8 @@
     <option value="false">Unbilled</option>
     <option value="true">Billed</option>
   </select>
+  <label><input type="checkbox" ref="selectall" onchange={ selectAll }/> Select All</label>
+  <button type="button" name="proj-bill" onclick={ billEntries }>Bill Selected</button>
 
   <ul if={ time }>
     <time-item each={ time } data={ this }></time-item>
@@ -27,6 +29,9 @@
     tag.getName = getName;
     tag.editEntry = editEntry;
     tag.deleteEntry = deleteEntry;
+    tag.billEntries = billEntries;
+    tag.selectAll = selectAll;
+    tag.select = select;
 
     tag.opts.projects.on('project-update', function() {
       tag.projects = tag.opts.projects.getProjects();
@@ -54,6 +59,25 @@
 
     function deleteEntry(val) {
       tag.opts.timeEntry.trigger('time-remove', val.item.key)
+    }
+
+    function select(val) {
+      val.item.selected = !val.item.selected;
+    }
+
+    function selectAll(val) {
+      tag.time.forEach(function(time) {
+        time.selected = val.target.checked;
+      });
+    }
+
+    function billEntries() {
+      tag.time.forEach(function(time) {
+        if (time.selected) {
+          tag.opts.timeEntry.trigger('time-bill', time.key);
+          time.selected = false;
+        }
+      });
     }
   </script>
 </time-report>

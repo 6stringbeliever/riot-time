@@ -79,10 +79,10 @@ riot.tag2('project-list', '<h2>Projects</h2> <ul> <li each="{this.projects}">{na
 
 });
 
-riot.tag2('time-item', '<li>{parent.getName(project)} {date} - {hours} - {description} <button type="button" onclick="{parent.editEntry}">Edit</button> <button type="button" onclick="{parent.deleteEntry}">Delete</button></li>', '', '', function(opts) {
+riot.tag2('time-item', '<li class="{billed: billed}"><input type="checkbox" checked="{selected}" onchange="{parent.select}"> {parent.getName(project)} {date} - {hours} - {description} <button type="button" onclick="{parent.editEntry}">Edit</button> <button type="button" onclick="{parent.deleteEntry}">Delete</button></li>', '', '', function(opts) {
 });
 
-riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="proj-bill-status">Billing Status</label> <select name="proj-bill-status" ref="projBillStatus" onchange="{getTime}"> <option value="all">All</option> <option value="false">Unbilled</option> <option value="true">Billed</option> </select> <ul if="{time}"> <time-item each="{time}" data="{this}"></time-item> </ul> <div if="{!time}"> <p>No time entries found. </div>', '', '', function(opts) {
+riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="proj-bill-status">Billing Status</label> <select name="proj-bill-status" ref="projBillStatus" onchange="{getTime}"> <option value="all">All</option> <option value="false">Unbilled</option> <option value="true">Billed</option> </select> <label><input type="checkbox" ref="selectall" onchange="{selectAll}"> Select All</label> <button type="button" name="proj-bill" onclick="{billEntries}">Bill Selected</button> <ul if="{time}"> <time-item each="{time}" data="{this}"></time-item> </ul> <div if="{!time}"> <p>No time entries found. </div>', '', '', function(opts) {
     var tag = this;
     tag.projects = [];
     tag.time = [];
@@ -90,6 +90,9 @@ riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label>
     tag.getName = getName;
     tag.editEntry = editEntry;
     tag.deleteEntry = deleteEntry;
+    tag.billEntries = billEntries;
+    tag.selectAll = selectAll;
+    tag.select = select;
 
     tag.opts.projects.on('project-update', function() {
       tag.projects = tag.opts.projects.getProjects();
@@ -117,5 +120,24 @@ riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label>
 
     function deleteEntry(val) {
       tag.opts.timeEntry.trigger('time-remove', val.item.key)
+    }
+
+    function select(val) {
+      val.item.selected = !val.item.selected;
+    }
+
+    function selectAll(val) {
+      tag.time.forEach(function(time) {
+        time.selected = val.target.checked;
+      });
+    }
+
+    function billEntries() {
+      tag.time.forEach(function(time) {
+        if (time.selected) {
+          tag.opts.timeEntry.trigger('time-bill', time.key);
+          time.selected = false;
+        }
+      });
     }
 });
