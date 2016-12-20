@@ -72,6 +72,12 @@ var TimeEntryList = function(db, riot) {
     }
   });
 
+  this.on('time-update', function(key, entry) {
+    if (key && entry) {
+      this.db.ref('time/' + key).update(entry);
+    }
+  });
+
   this.on('time-remove', function(key) {
     this.db.ref('time/' + key).remove();
   });
@@ -107,13 +113,36 @@ var TimeEntryList = function(db, riot) {
     }.bind(this));
   });
 }
+TimeEntryList.prototype.getEntryForKey = function(key) {
+  var time = null;
+  var i = 0;
+  while (time === null && i < this.timeEntries.length) {
+    if (this.timeEntries[i].key === key) {
+      time = this.timeEntries[i];
+    }
+    i++;
+  }
+  return time;
+}
+
+var State = function(riot) {
+  riot.observable(this);
+
+  this.editEntry = null;
+
+  this.on('set-edit-entry', function(key) {
+    this.editEntry = key;
+    this.trigger('update-edit-entry');
+  }.bind(this));
+}
 
 var projects = new ProjectList(firebase.database(), riot);
 var timeEntry = new TimeEntryList(firebase.database(), riot);
+var state = new State(riot);
 
 riot.mount('project-add-form', {projects: projects});
 riot.mount('project-list', {projects: projects});
-riot.mount('entry-form', {projects: projects, timeEntry: timeEntry});
-riot.mount('time-report', {projects: projects, timeEntry: timeEntry});
+riot.mount('entry-form', {projects: projects, timeEntry: timeEntry, state: state});
+riot.mount('time-report', {projects: projects, timeEntry: timeEntry, state: state});
 riot.mount('time-item');
 riot.mount('app-nav');

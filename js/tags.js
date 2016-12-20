@@ -1,11 +1,14 @@
 riot.tag2('app-nav', '<nav> <ul> <li>Enter Time</li> <li>Reports</li> <li>Projects</li> </ul> </nav>', '', '', function(opts) {
 });
 
-riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" type="date"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" type="number"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description"></textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus"> Billed</label> <button>Enter Time</button> </form>', '', '', function(opts) {
+riot.tag2('entry-form', '<h2>{header}</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" riot-value="{entry.date}" type="{\'date\'}"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}" selected="{entry.key === key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" riot-value="{entry.hours}" type="{\'number\'}"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description">{entry.description}</textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked="{entry.billed}"> Billed</label> <button type="submit">{btntext}</button> <a if="{key}" onclick="{cancel}">Cancel</a> </form>', '', '', function(opts) {
     var tag = this;
     tag.projects = [];
+    tag.errors = [];
     tag.submitTime = submitTime;
     tag.reset = reset;
+    tag.cancel = cancel;
+    tag.entry = {};
 
     tag.on('mount', function() {
       tag.reset();
@@ -14,6 +17,15 @@ riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTi
     tag.opts.projects.on('project-update', tag.update);
     tag.on('update', function() {
       tag.projects = tag.opts.projects.getProjects();
+      tag.header = tag.key ? 'Edit Entry' : 'Enter Time';
+      tag.btntext = tag.key ? 'Update Time' : 'Enter Time';
+    });
+
+    tag.opts.state.on('update-edit-entry', function() {
+      tag.reset();
+      tag.key = tag.opts.state.editEntry;
+      tag.entry = tag.opts.timeEntry.getEntryForKey(tag.key);
+      tag.update();
     });
 
     function submitTime(e) {
@@ -32,19 +44,43 @@ riot.tag2('entry-form', '<h2>Time Entry</h2> <form action="" onsubmit="{submitTi
       if (this.refs.date.value) {
         entry.date = this.refs.date.value;
       }
-      if (this.refs.billStatus.checked) {
-        entry.billed = this.refs.billStatus.checked;
+      entry.billed = this.refs.billStatus.checked;
+      if (tag.errors.length === 0) {
+        if (tag.key) {
+          tag.opts.timeEntry.trigger('time-update', tag.key, entry);
+        } else {
+          tag.opts.timeEntry.trigger('time-add', entry);
+        }
+        tag.reset();
       }
-      tag.opts.timeEntry.trigger('time-add', entry);
-      tag.reset();
     }
 
     function reset() {
-      var now = new Date();
       tag.refs.form.reset();
-
-      tag.refs.date.value = now.toISOString().substr(0, 10);
+      tag.entry = getEmptyEntry();
     }
+
+    function cancel() {
+      tag.reset();
+      tag.key = null;
+      tag.update();
+    }
+
+    function getUsefulDateString(d) {
+      var month = ('0' + (d.getMonth() + 1)).slice(-2);
+      var day = ('0' + d.getDate()).slice(-2);
+      return d.getFullYear() + '-' + month + '-' + day;
+    }
+
+    function getEmptyEntry() {
+      return {
+        date: getUsefulDateString(new Date()),
+        billed: false,
+        description: '',
+        hours: 0
+      };
+    }
+
 });
 
 riot.tag2('project-add-form', '<h2>Add a project</h2> <label htmlfor="proj-add">Name</label> <input type="text" name="proj-add" ref="projAdd" placeholder="Enter your project name"> <button type="button" onclick="{addItem}">Add Project</button>', '', '', function(opts) {
@@ -115,11 +151,11 @@ riot.tag2('time-report', '<h2>Time</h2> <label for="proj-select">Project</label>
     }
 
     function editEntry(val) {
-      console.log('clicked edit', val.item);
+      tag.opts.state.trigger('set-edit-entry', val.item.key);
     }
 
     function deleteEntry(val) {
-      tag.opts.timeEntry.trigger('time-remove', val.item.key)
+      tag.opts.timeEntry.trigger('time-remove', val.item.key);
     }
 
     function select(val) {

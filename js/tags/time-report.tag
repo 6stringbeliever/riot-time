@@ -54,11 +54,11 @@
     }
 
     function editEntry(val) {
-      console.log('clicked edit', val.item);
+      tag.opts.state.trigger('set-edit-entry', val.item.key);
     }
 
     function deleteEntry(val) {
-      tag.opts.timeEntry.trigger('time-remove', val.item.key)
+      tag.opts.timeEntry.trigger('time-remove', val.item.key);
     }
 
     function select(val) {
