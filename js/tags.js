@@ -1,4 +1,14 @@
-riot.tag2('app-nav', '<nav> <ul> <li>Enter Time</li> <li>Reports</li> <li>Projects</li> </ul> </nav>', '', '', function(opts) {
+riot.tag2('app-nav', '<nav> <ul> <li each="{links}"><a href="{\'#\' + url}">{text}</a></li> </ul> </nav>', '', '', function(opts) {
+    var tag = this;
+
+    this.links = [
+      {text: 'Enter Time',
+      url: 'time'},
+      {text: 'Reports',
+      url: 'reports'},
+      {text: 'Projects',
+      url: 'projects'}
+    ];
 });
 
 riot.tag2('entry-form', '<h2>{header}</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" riot-value="{entry.date}" type="{\'date\'}"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}" selected="{entry.key === key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" riot-value="{entry.hours}" type="{\'number\'}"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description">{entry.description}</textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked="{entry.billed}"> Billed</label> <button type="submit">{btntext}</button> <a if="{key}" onclick="{cancel}">Cancel</a> </form>', '', '', function(opts) {
