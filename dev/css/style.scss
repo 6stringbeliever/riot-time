@@ -1,0 +1,28 @@
+$bg: white;
+
+body {
+  background-color: $bg;
+}
+
+* {
+  box-sizing: border-box;
+}
+label {
+  display: block;
+}
+.contain {
+  display: flex;
+  flex-direction: row;
+  width: 75%;
+  margin: 0 auto;
+}
+.sec {
+  padding: 12px;
+  width: 50%;
+}
+.billed {
+  color: blue;
+}
+textarea {
+  max-width: 100%;
+}

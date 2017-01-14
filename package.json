@@ -1,0 +1,25 @@
+{
+  "name": "riot-time",
+  "version": "1.0.0",
+  "description": "A simple time-tracking app built using Riot.js and Firebase.",
+  "main": "index.html",
+  "dependencies": {
+    "riot": "^3.0.5",
+    "riot-route": "^3.0.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.6",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.0.0",
+    "rollup-plugin-commonjs": "^7.0.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-riot": "^1.1.0",
+    "rollup-stream": "^1.16.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
