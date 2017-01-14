@@ -7,7 +7,7 @@
   <script>
     var tag = this;
 
-    tag.projects = []
+    tag.projects = []; 
 
     tag.removeItem = removeItem;
 
