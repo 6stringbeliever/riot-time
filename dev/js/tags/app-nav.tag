@@ -8,6 +8,6 @@
   <script>
     var tag = this;
 
-    this.links = this.refs.links;
+    this.links = this.opts.links;
   </script>
 </app-nav>
