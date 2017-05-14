@@ -1,30 +1,34 @@
 <entry-form>
-  <h2>{ header }</h2>
-  <form action="" onsubmit={ submitTime } ref="form">
-    <label for="time-date">Date</label>
-    <input type="date" name="time-date" ref="date" value={ entry.date }/>
-    <label for="time-proj">Select your project</label>
-    <select id="projects" ref="project">
-      <option each={ this.projects } value={ key } selected={ entry.key === key }>{ name }</option>
-    </select>
-    <label for="time-entry">Enter your hours</label>
-    <input type="number" name="time-entry" ref="hours" placeholder="Enter your hours" value={ entry.hours }/>
-    <label for="time-desc">Description</label>
-    <textarea name="time-desc" rows="4" cols="80" ref="description">{ entry.description }</textarea>
-    <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked={ entry.billed }> Billed</label>
-    <button type="submit">{ btntext }</button> <a if={ key } onclick={ cancel }>Cancel</a>
-  </form>
-
-
+  <div show={ display }>
+    <h2>{ header }</h2>
+    <form action="" onsubmit={ submitTime } ref="form">
+      <label for="time-date">Date</label>
+      <input type="date" name="time-date" ref="date" value={ entry.date }/>
+      <label for="time-proj">Select your project</label>
+      <select id="projects" ref="project">
+        <option each={ this.projects } value={ key } selected={ entry.key === key }>{ name }</option>
+      </select>
+      <label for="time-entry">Enter your hours</label>
+      <input type="number" name="time-entry" ref="hours" placeholder="Enter your hours" value={ entry.hours }/>
+      <label for="time-desc">Description</label>
+      <textarea name="time-desc" rows="4" cols="80" ref="description">{ entry.description }</textarea>
+      <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked={ entry.billed }> Billed</label>
+      <button type="submit">{ btntext }</button> <a if={ key } onclick={ cancel }>Cancel</a>
+    </form>
+  </div>
 
   <script>
+    import route from 'riot-route';
+
     var tag = this;
+    tag.display = true;
     tag.projects = [];
     tag.errors = [];
     tag.submitTime = submitTime;
     tag.reset = reset;
     tag.cancel = cancel;
     tag.entry = {};
+    tag.updateRoute = updateRoute.bind(this);
 
     tag.on('mount', function() {
       tag.reset();
@@ -96,6 +100,13 @@
         hours: 0
       };
     }
+
+    function updateRoute(init) {
+      this.display = init === 'time';
+      this.update();
+    }
+
+    route(tag.updateRoute);
 
   </script>
 </entry-form>

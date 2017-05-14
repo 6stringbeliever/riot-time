@@ -1,28 +1,33 @@
 <time-report>
-  <h2>Time</h2>
-  <label for="proj-select">Project</label>
-  <select name="proj-select" ref="projSelect" onchange={ getTime }>
-    <option value="all">All</option>
-    <option each={this.projects} value={key}>{name}</option>
-  </select>
-  <label for="proj-bill-status">Billing Status</label>
-  <select name="proj-bill-status" ref="projBillStatus" onchange={ getTime }>
-    <option value="all">All</option>
-    <option value="false">Unbilled</option>
-    <option value="true">Billed</option>
-  </select>
-  <label><input type="checkbox" ref="selectall" onchange={ selectAll }/> Select All</label>
-  <button type="button" name="proj-bill" onclick={ billEntries }>Bill Selected</button>
+  <div show={ display }>
+    <h2>Time</h2>
+    <label for="proj-select">Project</label>
+    <select name="proj-select" ref="projSelect" onchange={ getTime }>
+      <option value="all">All</option>
+      <option each={this.projects} value={key}>{name}</option>
+    </select>
+    <label for="proj-bill-status">Billing Status</label>
+    <select name="proj-bill-status" ref="projBillStatus" onchange={ getTime }>
+      <option value="all">All</option>
+      <option value="false">Unbilled</option>
+      <option value="true">Billed</option>
+    </select>
+    <label><input type="checkbox" ref="selectall" onchange={ selectAll }/> Select All</label>
+    <button type="button" name="proj-bill" onclick={ billEntries }>Bill Selected</button>
 
-  <ul if={ time }>
-    <time-item each={ time } data={ this }></time-item>
-  </ul>
-  <div if={ !time }>
-    <p>No time entries found.
+    <ul if={ time }>
+      <time-item each={ time } data={ this }></time-item>
+    </ul>
+    <div if={ !time }>
+      <p>No time entries found.
+    </div>
   </div>
 
   <script>
+    import route from 'riot-route';
+
     var tag = this;
+    tag.display = false;
     tag.projects = [];
     tag.time = [];
     tag.getTime = getTime;
@@ -32,6 +37,7 @@
     tag.billEntries = billEntries;
     tag.selectAll = selectAll;
     tag.select = select;
+    tag.updateRoute = updateRoute.bind(this);
 
     tag.opts.projects.on('project-update', function() {
       tag.projects = tag.opts.projects.getProjects();
@@ -79,5 +85,12 @@
         }
       });
     }
+
+    function updateRoute(init) {
+      this.display = (init === 'reports');
+      this.update();
+    }
+
+    route(tag.updateRoute);
   </script>
 </time-report>
