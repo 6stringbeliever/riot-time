@@ -1,5 +1,5 @@
 <time-report>
-  <div show={ display }>
+  <div class="card" if={ display }>
     <h2>Time</h2>
     <label for="proj-select">Project</label>
     <select name="proj-select" ref="projSelect" onchange={ getTime }>

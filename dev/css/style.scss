@@ -1,28 +1,84 @@
-$bg: white;
+// vars
+$white: white;
 
-body {
-  background-color: $bg;
-}
+$blue-light: rgb(190, 231, 255);
+$blue-mid-dark: rgb(3, 120, 187);
+$blue-dark: rgb(0, 72, 113);
 
+$grey-accent: rgb(180, 180, 180);
+$grey-light: rgb(247, 247, 247);
+$grey-dark: rgb(80, 80, 80);
+$grey-shadow: rgba(80, 80, 80, 0.75);
+
+// reset
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
+
+// base
+body {
+  background-color: $blue-light;
+  font-family: 'Merriweather Sans', Helvetica, sans-serif;
+}
+
 label {
   display: block;
 }
+
+header {
+  width: 100%;
+  background-color: $blue-dark;
+  padding: 0.75rem 2rem;
+}
+.nav-container {
+  width: 100%;
+  background-color: $blue-mid-dark;
+}
+main {
+  padding-top: 1.5rem;
+}
+// layout
+
+.header-nav {
+  list-style: none;
+  padding: 0.5rem 0;
+}
+.header-nav-item {
+  display: inline-block;
+  margin-right: 1.5rem;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+}
+
 .contain {
   display: flex;
   flex-direction: row;
-  width: 75%;
+  width: 600px;
+  max-width: 90%;
   margin: 0 auto;
-}
-.sec {
-  padding: 12px;
-  width: 50%;
 }
 .billed {
   color: blue;
 }
+.card {
+  width: 100%;
+  border: 1px solid $grey-accent;
+  background-color: $grey-light;
+  padding: 1.5rem;
+  box-shadow: 1px 1px 2px $grey-shadow, -1px 1px 2px $grey-shadow;
+}
 textarea {
   max-width: 100%;
+}
+
+// Text
+
+h1 {
+  font-family: Bangers, Verdana, sans-serif;
+  color: $white;
+  font-size: 2.5rem;
 }

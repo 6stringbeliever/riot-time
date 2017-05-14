@@ -1,5 +1,5 @@
 <project-form>
-  <div show={ display }>
+  <div class="card" if={ display }>
     <project-list projects={ opts.projects }></project-list>
     <project-add-form projects={ opts.projects }></project-add-form>
   </div>
@@ -13,7 +13,7 @@
     tag.updateRoute = updateRoute.bind(this);
 
     function updateRoute(init) {
-      this.display = init === 'projects';
+      this.display = (init === 'projects');
       this.update();
     }
 

@@ -1,5 +1,5 @@
 <entry-form>
-  <div show={ display }>
+  <div class="card" if={ display }>
     <h2>{ header }</h2>
     <form action="" onsubmit={ submitTime } ref="form">
       <label for="time-date">Date</label>
@@ -102,7 +102,7 @@
     }
 
     function updateRoute(init) {
-      this.display = init === 'time';
+      this.display = (init === 'time' || init === '');
       this.update();
     }
 

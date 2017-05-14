@@ -1,7 +1,7 @@
 <app-nav>
   <nav>
-    <ul>
-      <li each={ links }><a href={'#' + url}>{ text }</a></li>
+    <ul class="header-nav">
+      <li class="header-nav-item" each={ links }><a href={'#' + url}>{ text }</a></li>
     </ul>
   </nav>
 
