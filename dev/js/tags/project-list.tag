@@ -1,8 +1,9 @@
 <project-list>
   <h2>Projects</h2>
-  <ul>
+  <ul show={ this.projects.length > 0 }>
     <li each={ this.projects }>{ name } <button type="button" onclick={ parent.removeItem }>Delete</button></li>
   </ul>
+  <p show={ this.projects.length === 0 }>You haven't created any projects yet.</p>
 
   <script>
     var tag = this;

@@ -5,14 +5,16 @@ var ProjectList = function(db, riot) {
 
   this.db.ref('projects').on('value', function(proj) {
     var data = proj.val();
-    var keys = Object.keys(data);
     var newprojlist = [];
-    keys.forEach(function(key) {
-      newprojlist.push({
-        name: data[key].name,
-        key: key
-      })
-    });
+    if (data) {
+      var keys = Object.keys(data);
+      keys.forEach(function(key) {
+        newprojlist.push({
+          name: data[key].name,
+          key: key
+        })
+      });
+    }
     this.projects = newprojlist;
     this.trigger('project-update');
   }.bind(this));
