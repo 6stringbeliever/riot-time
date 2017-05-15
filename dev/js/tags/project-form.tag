@@ -1,4 +1,4 @@
-<project-form>
+<project-form class="component">
   <div class="card" if={ display }>
     <project-list projects={ opts.projects }></project-list>
     <project-add-form projects={ opts.projects }></project-add-form>

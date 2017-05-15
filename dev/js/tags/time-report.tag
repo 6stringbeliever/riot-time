@@ -1,4 +1,4 @@
-<time-report>
+<time-report class="component">
   <div class="card" if={ display }>
     <h2>Time</h2>
     <label for="proj-select">Project</label>

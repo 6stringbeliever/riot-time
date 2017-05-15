@@ -1,4 +1,4 @@
-<entry-form>
+<entry-form class="component">
   <div class="card" if={ display }>
     <h2>{ header }</h2>
     <form action="" onsubmit={ submitTime } ref="form">
