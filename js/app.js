@@ -3213,7 +3213,7 @@ var State = function(riot) {
   }.bind(this));
 };
 
-riot$1.tag2('project-form', '<div class="card" if="{display}"> <project-list projects="{opts.projects}"></project-list> <project-add-form projects="{opts.projects}"></project-add-form> </div>', '', '', function(opts) {
+riot$1.tag2('project-form', '<div class="card" if="{display}"> <project-list projects="{opts.projects}"></project-list> <project-add-form projects="{opts.projects}"></project-add-form> </div>', '', 'class="component"', function(opts) {
 
     var tag$$1 = this;
     tag$$1.display = false;
@@ -3259,7 +3259,7 @@ riot$1.tag2('project-list', '<h2>Projects</h2> <ul show="{this.projects.length >
 
 });
 
-riot$1.tag2('entry-form', '<div class="card" if="{display}"> <h2>{header}</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" riot-value="{entry.date}" type="{\'date\'}"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}" selected="{entry.key === key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" riot-value="{entry.hours}" type="{\'number\'}"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description">{entry.description}</textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked="{entry.billed}"> Billed</label> <button type="submit">{btntext}</button> <a if="{key}" onclick="{cancel}">Cancel</a> </form> </div>', '', '', function(opts) {
+riot$1.tag2('entry-form', '<div class="card" if="{display}"> <h2>{header}</h2> <form action="" onsubmit="{submitTime}" ref="form"> <label for="time-date">Date</label> <input name="time-date" ref="date" riot-value="{entry.date}" type="{\'date\'}"> <label for="time-proj">Select your project</label> <select id="projects" ref="project"> <option each="{this.projects}" riot-value="{key}" selected="{entry.key === key}">{name}</option> </select> <label for="time-entry">Enter your hours</label> <input name="time-entry" ref="hours" placeholder="Enter your hours" riot-value="{entry.hours}" type="{\'number\'}"> <label for="time-desc">Description</label> <textarea name="time-desc" rows="4" cols="80" ref="description">{entry.description}</textarea> <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked="{entry.billed}"> Billed</label> <button type="submit">{btntext}</button> <a if="{key}" onclick="{cancel}">Cancel</a> </form> </div>', '', 'class="component"', function(opts) {
 
     var tag$$1 = this;
     tag$$1.display = true;
@@ -3351,7 +3351,7 @@ riot$1.tag2('entry-form', '<div class="card" if="{display}"> <h2>{header}</h2> <
 
 });
 
-riot$1.tag2('time-report', '<div class="card" if="{display}"> <h2>Time</h2> <label for="proj-select">Project</label> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="proj-bill-status">Billing Status</label> <select name="proj-bill-status" ref="projBillStatus" onchange="{getTime}"> <option value="all">All</option> <option value="false">Unbilled</option> <option value="true">Billed</option> </select> <label><input type="checkbox" ref="selectall" onchange="{selectAll}"> Select All</label> <button type="button" name="proj-bill" onclick="{billEntries}">Bill Selected</button> <ul if="{time}"> <time-item each="{time}" data="{this}"></time-item> </ul> <div if="{!time}"> <p>No time entries found. </div> </div>', '', '', function(opts) {
+riot$1.tag2('time-report', '<div class="card" if="{display}"> <h2>Time</h2> <label for="proj-select">Project</label> <select name="proj-select" ref="projSelect" onchange="{getTime}"> <option value="all">All</option> <option each="{this.projects}" riot-value="{key}">{name}</option> </select> <label for="proj-bill-status">Billing Status</label> <select name="proj-bill-status" ref="projBillStatus" onchange="{getTime}"> <option value="all">All</option> <option value="false">Unbilled</option> <option value="true">Billed</option> </select> <label><input type="checkbox" ref="selectall" onchange="{selectAll}"> Select All</label> <button type="button" name="proj-bill" onclick="{billEntries}">Bill Selected</button> <ul if="{time}"> <time-item each="{time}" data="{this}"></time-item> </ul> <div if="{!time}"> <p>No time entries found. </div> </div>', '', 'class="component"', function(opts) {
 
     var tag$$1 = this;
     tag$$1.display = false;

@@ -13,7 +13,7 @@ label {
 header {
   width: 100%;
   background-color: #004871;
-  padding: 0.75rem 2rem; }
+  padding: 0.75rem; }
 
 .nav-container {
   width: 100%;
@@ -21,6 +21,9 @@ header {
 
 main {
   padding-top: 1.5rem; }
+
+.component {
+  max-width: 100%; }
 
 .header-nav {
   list-style: none;
@@ -36,8 +39,8 @@ main {
 .contain {
   display: flex;
   flex-direction: row;
-  width: 600px;
-  max-width: 90%;
+  width: 90%;
+  max-width: 600px;
   margin: 0 auto; }
 
 .billed {
