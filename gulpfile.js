@@ -51,3 +51,5 @@ gulp.task('serve', function() {
   gulp.watch('./dev/css/**/*.scss', ['sass']);
   gulp.watch('./dev/js/**/*.@(js|tag)', ['rollup']);
 });
+
+gulp.task('build', ['move', 'rollup', 'sass']);
