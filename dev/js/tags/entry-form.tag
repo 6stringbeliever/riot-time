@@ -9,7 +9,7 @@
         <option each={ this.projects } value={ key } selected={ entry.key === key }>{ name }</option>
       </select>
       <label for="time-entry">Enter your hours</label>
-      <input type="number" name="time-entry" ref="hours" placeholder="Enter your hours" value={ entry.hours }/>
+      <input type="number" step="0.25" name="time-entry" ref="hours" placeholder="Enter your hours" value={ entry.hours }/>
       <label for="time-desc">Description</label>
       <textarea name="time-desc" rows="4" cols="80" ref="description">{ entry.description }</textarea>
       <label for="time-bill-status"><input type="checkbox" name="time-bill-status" ref="billStatus" checked={ entry.billed }> Billed</label>
